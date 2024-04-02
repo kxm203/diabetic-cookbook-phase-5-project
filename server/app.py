@@ -3,11 +3,12 @@
 # Standard library imports
 
 # Remote library imports
-from flask import request
+from flask import Flask, request
 from flask_restful import Resource
+from flask_migrate import Migrate
 
 # Local imports
-from config import app, db, api
+from config import app, db, api, CORS
 # Add your model imports
 
 
