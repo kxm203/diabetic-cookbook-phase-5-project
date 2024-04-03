@@ -1,8 +1,28 @@
-import React, { useEffect, useState } from "react";
-import { Switch, Route } from "react-router-dom";
+import React, { useState } from "react";
+import { Outlet } from "react-router-dom";
+
+import Header from "./Header";
+import Auth from "./Auth";
 
 function App() {
-  return <h1>Project Client</h1>;
+  const [ darkMode, setDarkMode ] = useState(false)
+  const [ loggedInUser, setLoggedInUser ] = useState(null)
+
+  function onDarkModeToggle() {
+    setDarkMode(!darkMode)
+  }
+  const className = darkMode ? 'App bg-dark' : 'App light'
+
+  return (
+    <div className = { className }>
+      <Header darkMode = { darkMode } onDarkModeToggle = { onDarkModeToggle} />
+    {
+      !!loggedInUser ?
+      <Outlet />:
+      <Auth setUser = { setLoggedInUser } />
+    }
+  </div>
+  );
 }
 
 export default App;

@@ -5,3 +5,51 @@
   --text: hsla(0, 0%, 100%, 0.88);
 }
 
+header {
+  background-color: var(--header);
+  padding: 10px 0;
+}
+
+img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+
+.nav-links {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.nav-links li {
+  margin: 0 10px;
+}
+
+.nav-links a {
+  color: var(--text);
+  text-decoration: none;
+  color: black;
+  margin: 0 10px;
+}
+
+.nav-links a:hover {
+  color: var(--link);
+}
+
+.dark-mode-button {
+  background-color: var(--link);
+  color: var(--header);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.Container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center content vertically */
+  align-items: center; /* Center content horizontally */
+  height: 100vh; /* Set the container height to 100% of the viewport height */
+}
