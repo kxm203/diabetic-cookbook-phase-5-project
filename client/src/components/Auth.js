@@ -1,10 +1,12 @@
 import { useState } from 'react';
-import { Container, Form, Button, Alert } from "react-bootstrap";
+import { Container, Form, Button } from "react-bootstrap";
 import { useFormik }from 'formik';
 import * as yup from 'yup';
+import { useNavigate } from 'react-router-dom';
 
 function Auth({ setUser}) {
     const [signUp, setSignUp ] = useState(true)
+    const navigate = useNavigate();
 
     const signUpSchema = yup.object().shape({
         username: yup.string().min(6, 'Username is too short!').max(12, 'Username is too long!'),
@@ -34,8 +36,9 @@ function Auth({ setUser}) {
             .then((resp) => {
                 if (resp.ok) {
                     resp.json().then(({ user }) => {
-                        setUser(user)
-                    })
+                        setUser(user);
+                        navigate('/recipes');
+                    });
                 } else {
                     console.log('oh no! something went wrong')
                 }

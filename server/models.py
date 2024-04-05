@@ -1,6 +1,5 @@
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.ext.associationproxy import association_proxy
-
 from config import db, bcrypt
 
 # Models go here!
@@ -8,13 +7,14 @@ from config import db, bcrypt
 class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
 
-    serialize_rules = ('-created_at', '-updated_at',)
+    serialize_rules = ('-created_at', '-updated_at', '-_password_hash')
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, unique=True, nullable=False)
     _password_hash = db.Column(db.String, nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
+
     recipes = db.relationship('Recipe', back_populates='user')
 
     @property
@@ -28,14 +28,17 @@ class User(db.Model, SerializerMixin):
         hash_object_as_string = bcrypt_hash.decode('utf-8')
         self._password_hash = hash_object_as_string
 
+    def __repr__(self):
+        return f'<User id={self.id} username={self.username}>'
 
 
-class RecipeIngredient(db.Model):
-    __tablename__ = 'recipe_ingredients'
 
-    id = db.Column(db.Integer, primary_key=True)
-    recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), nullable=False)
-    ingredient = db.Column(db.String(255), nullable=False)
+# class RecipeIngredient(db.Model):
+#     __tablename__ = 'recipe_ingredients'
+
+#     id = db.Column(db.Integer, primary_key=True)
+#     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), nullable=False)
+#     ingredient = db.Column(db.String(255), nullable=False)
 
 class Recipe(db.Model, SerializerMixin):
     __tablename__ = 'recipes'
@@ -48,22 +51,22 @@ class Recipe(db.Model, SerializerMixin):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     user = db.relationship('User', back_populates='recipes')
 
-    categories = db.relationship('Category', secondary='recipe_categories', backref='recipes')
+    #categories = db.relationship('Category', secondary='recipe_categories', backref='recipes')
 
-class Category(db.Model):
-    __tablename__ = 'categories'
+# class Category(db.Model):
+#     __tablename__ = 'categories'
 
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=True)
+#     id = db.Column(db.Integer, primary_key=True)
+#     name = db.Column(db.String(100), nullable=True)
 
-    recipes =db.relationship('Recipe', secondary='recipe_categories', backref='categories')
+#     recipes =db.relationship('Recipe', secondary='recipe_categories', backref='categories')
 
-class RecipeCategory(db.Model):
-    __tablename__ = 'recipe_categories'
+# class RecipeCategory(db.Model):
+#     __tablename__ = 'recipe_categories'
 
-    recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), primary_key=True)
-    category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), primary_key=True)
+#     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), primary_key=True)
+#     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), primary_key=True)
 
-    recipe = db.relationship('Recipe', backref='recipe_categories')
-    category = db.relationship('Category', backref='recipe_categories')
+#     recipe = db.relationship('Recipe', backref='recipe_categories')
+#     category = db.relationship('Category', backref='recipe_categories')
 

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 
-import Header from "./Header";
-import Auth from "./Auth";
+import Header from "./components/Header";
+import Auth from "./components/Auth";
 
 function App() {
   const [ darkMode, setDarkMode ] = useState(false)
