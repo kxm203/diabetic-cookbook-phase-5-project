@@ -1,4 +1,4 @@
-import React, { useEffect, useState, } from "react";
+import React, { useState, } from "react";
 
 function RecipeCard({ recipe, toggleFavoriteStatus }) {
     const [isFavorite, setIsFavorite] = useState(true);
@@ -11,10 +11,10 @@ function RecipeCard({ recipe, toggleFavoriteStatus }) {
     return (
         <li className="card" data-testid="recipe-item">
             <h4>{recipe.title}</h4>
-            <p>Time to Make: ${recipe.timeToMake}</p>
-            <p>Ingredients: ${recipe.ingredients}</p>
-            <p>Instructions: ${recipe.instructions}</p>
-            <p>Categories: ${recipe.categories}</p>
+            <p>Time to Make: {recipe.timeToMake}</p>
+            <p>Ingredients: {recipe.ingredients}</p>
+            <p>Instructions: {recipe.instructions}</p>
+            <p>Categories: {recipe.categories}</p>
             {isFavorite ? (
                 <button className="primary" onClick={handleClick}>🩶</button>
             ) : (

@@ -14,7 +14,8 @@ img {
   display: block;
   margin-left: auto;
   margin-right: auto;
-  width: 50%;
+  width: 25%;
+  border-radius: 5px;
 }
 
 .nav-links {
@@ -46,10 +47,35 @@ img {
   border-radius: 4px;
   cursor: pointer;
 }
-.Container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center; /* Center content vertically */
-  align-items: center; /* Center content horizontally */
-  height: 100vh; /* Set the container height to 100% of the viewport height */
+.auth-container {
+  border-radius: 5px; /* Rounded corners */
+  padding: 20px; /* Adjust padding as needed */
+  display: flex; /* Enable flexbox for centering (if needed) */
+  justify-content: center; /* Horizontally center content (optional) */
+  align-items: center; /* Vertically center content (optional) */
+}
+.about {
+  text-align: center;
+  margin: 10px;
+  padding: 20px;
+}
+.login-page {
+  text-align: center;
+  color: blue;
+  background-color: burlywood;
+}
+.new-recipe-form {
+  text-align: center;
+  justify-content: center;
+  background-color: lightgreen;
+  color: brown;
+}
+.new-recipe-form form {
+  display: grid;
+  grid-template-columns: 1fr; /* One full-width column */
+  grid-gap: 10px; /* Adjust spacing as needed */
+  word-wrap: soft;
+}
+.new-recipe-form button {
+  margin: auto;
 }

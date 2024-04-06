@@ -1,24 +1,18 @@
 import { NavLink } from "react-router-dom";
+import React from 'react';
 
-function Header({ darkMode, onDarkModeToggle }) {
-    const handleModeClick = () => onDarkModeToggle()
-    const buttonText = darkMode ? "Light" : "Dark"
+function Header() {
+
 
     return (
-        <header className="header">
+        <header>
             <nav className="nav-links">
                 <NavLink to="/recipes">Recipes</NavLink>
                 <NavLink to="/recipes/new">New Recipe</NavLink>
                 <NavLink to="/recipes/favorite">Favorites</NavLink>
+                <br/>
+                <br/>
             </nav>
-            <div className="dark-mode-button-container">
-                <button onClick={handleModeClick}>{buttonText}</button>
-            </div>
-            <h1>
-                <a href="/">
-                    <img src="https://julianhealthcare.com/wp-content/uploads/2019/07/Diabetes.jpg" alt="Diabetes" className="logo" />
-                </a>
-            </h1>
         </header>
     )
 }

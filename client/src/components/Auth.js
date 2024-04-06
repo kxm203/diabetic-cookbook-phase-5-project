@@ -24,33 +24,35 @@ function Auth({ setUser}) {
             passwordConfirmation: ''
         },
         validationSchema: signUp ? signUpSchema : loginSchema,
-        onSubmit: (values) => {
+        onSubmit: async (values) => {
             const endpoint = signUp ? '/users' : '/login'
-            fetch(endpoint, {
-                method: 'POST',
-                headers: {
-                    "Content-Type": 'application/json'
-                },
-                body: JSON.stringify(values)
-            })
-            .then((resp) => {
-                if (resp.ok) {
-                    resp.json().then(({ user }) => {
-                        setUser(user);
-                        navigate('/recipes');
-                    });
+            try {
+                const response = await fetch(endpoint, {
+                  method: 'POST',
+                  headers: {
+                    "Content-Type": 'application/json',
+                  },
+                  body: JSON.stringify(values),
+                });
+        
+                if (response.ok) {
+                  const data = await response.json();
+                  setUser(data.user || data); // Assuming the response contains user data
+                  navigate('/recipes'); // Redirect after successful login
                 } else {
-                    console.log('oh no! something went wrong')
+                  console.error('Login failed:', await response.text());
                 }
-            })
-        }
-    })
+              } catch (error) {
+                console.error('Error:', error);
+              }
+            },
+    });
     function toggleSignUp() {
         setSignUp((currentSignUp) => !currentSignUp)
     }
 
     return (
-        <Container>
+        <Container className="auth-container d-flex flex-column">
             <Button onClick={toggleSignUp} variant="primary">
                 {signUp ? 'Please login!' : 'Signup to add recipes!'}
             </Button>
@@ -99,9 +101,11 @@ function Auth({ setUser}) {
                         </Form.Control.Feedback>
                     </Form.Group>
                 )}
+                <div className="d-flex justify-content-center">
                 <Button variant="primary" type="submit">
                     Submit
                 </Button>
+                </div>
             </Form>
         </Container>
     );

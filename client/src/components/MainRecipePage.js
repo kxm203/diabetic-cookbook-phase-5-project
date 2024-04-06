@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import NewRecipeForm from "./NewRecipeForm";
 import RecipeList from "./RecipeList";
 import Search from "./Search";
+import Header from "./Header";
 
 function MainRecipePage() {
     const [recipes, setRecipes] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
-    const [filteredRecipes, setFilteredRecipes] = useState(recipes);
+    const [filteredRecipes, setFilteredRecipes] = useState([]);
+    
 
     useEffect(() => {
         fetch("/recipes")
@@ -17,7 +19,7 @@ function MainRecipePage() {
     const addRecipe = (newRecipe) => {
         fetch("/recipes", {
             method: "POST",
-            headers: {"Content-Type": "Application/json"},
+            headers: {"Content-Type": "Application/JSON"},
             body: JSON.stringify(newRecipe),
         })
         .then((resp) => resp.json())
@@ -52,15 +54,9 @@ function MainRecipePage() {
 
     return (
         <main className="main-container">
-            <NewRecipeForm addRecipe={addRecipe}/>
-            <br />
-            <br />
-            <br />
+            <Header />
             <Search onChange={ handleSearch }/>
-            <br />
-            <br />
-            <br />
-            <RecipeList recipes={filteredRecipes} deleteRecipe={deleteRecipe} addRecipe={addRecipe}/>
+            <RecipeList recipes={filteredRecipes} deleteRecipe={deleteRecipe} addRecipe={addRecipe} />
         </main>
     );
 }

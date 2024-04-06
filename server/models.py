@@ -32,24 +32,21 @@ class User(db.Model, SerializerMixin):
         return f'<User id={self.id} username={self.username}>'
 
 
-
-# class RecipeIngredient(db.Model):
-#     __tablename__ = 'recipe_ingredients'
-
-#     id = db.Column(db.Integer, primary_key=True)
-#     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), nullable=False)
-#     ingredient = db.Column(db.String(255), nullable=False)
-
 class Recipe(db.Model, SerializerMixin):
     __tablename__ = 'recipes'
 
+    serialize_rules = ('-user_id', '-user')
+
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(50), nullable=False)
-    time_to_make = db.Column(db.Integer, nullable=True)
-    ingredients = db.relationship('RecipeIngredient', back_populates='recipe')
+    time_to_make = db.Column(db.Integer, nullable=False)
+    ingredients = db.Column(db.Text, nullable=False)
     instructions = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     user = db.relationship('User', back_populates='recipes')
+
+    def __repr__(self):
+        return f'<Recipe id={self.id} title={self.title} time_to_make={self.time_to_make} ingredients={self.ingredients} instructions={self.ingredients} user_id={self.user_id} user={self.user}>'
 
     #categories = db.relationship('Category', secondary='recipe_categories', backref='recipes')
 
