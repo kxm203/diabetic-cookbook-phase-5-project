@@ -28,6 +28,22 @@ class User(db.Model, SerializerMixin):
         hash_object_as_string = bcrypt_hash.decode('utf-8')
         self._password_hash = hash_object_as_string
 
+    def add_favorite(self, recipe):
+        if not self.is_favoriting(recipe):
+            favorite = Favorite(user_id=self.id, recipe_id=recipe.id)
+            db.session.add(favorite)
+            db.session.commit()
+
+    def remove_favorite(self, recipe):
+        favorite = self.favorites.filter(Favorite.recipe_id == recipe.id).first()
+        if favorite:
+            db.session.delete(favorite)
+            db.session.commit()
+
+    def is_favoriting(self, recipe):
+        favorite = self.favorites.filter(Favorite.recipe_id == recipe.id).first()
+        return bool(favorite)
+
     def __repr__(self):
         return f'<User id={self.id} username={self.username}>'
 
@@ -45,25 +61,46 @@ class Recipe(db.Model, SerializerMixin):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     user = db.relationship('User', back_populates='recipes')
 
+    def is_favorited_by(self, user):
+        favorite = user.favorites.filter(Favorite.recipe_id == self.id).first()
+        return bool(favorite)
+
     def __repr__(self):
         return f'<Recipe id={self.id} title={self.title} time_to_make={self.time_to_make} ingredients={self.ingredients} instructions={self.ingredients} user_id={self.user_id} user={self.user}>'
 
-    #categories = db.relationship('Category', secondary='recipe_categories', backref='recipes')
+    categories = db.relationship('Category', secondary='recipe_categories', backref='recipe_in_category', overlaps="categories,recipe_in_category")
 
-# class Category(db.Model):
-#     __tablename__ = 'categories'
+class Category(db.Model):
+    __tablename__ = 'categories'
 
-#     id = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.String(100), nullable=True)
+    serialize_rules = ('-recipes_in_category')
 
-#     recipes =db.relationship('Recipe', secondary='recipe_categories', backref='categories')
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=True)
 
-# class RecipeCategory(db.Model):
-#     __tablename__ = 'recipe_categories'
+    recipes = db.relationship('Recipe', secondary='recipe_categories', backref='recipes_in_category', overlaps="categories,recipe_in_category")
 
-#     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), primary_key=True)
-#     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), primary_key=True)
+class RecipeCategory(db.Model):
+    __tablename__ = 'recipe_categories'
 
-#     recipe = db.relationship('Recipe', backref='recipe_categories')
-#     category = db.relationship('Category', backref='recipe_categories')
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), primary_key=True)
+    category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), primary_key=True)
 
+    category = db.relationship('Category', backref='recipe_categories')
+
+class Favorite(db.Model):
+    __tablename__ = 'favorites'
+
+    serialize_rules = ('-user_id', '-recipe_id')
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), nullable=False)
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+    updated_at = db.Column(db.DateTime, onupdate=db.func.now())
+
+    user = db.relationship('User', back_populates='favorites')
+    recipe = db.relationship('Recipe', back_populates='favorites')
+
+    def __repr__(self):
+        return f'<Favorite id={self.id} user_id={self.user_id} recipe_id={self.recipe_id}>'

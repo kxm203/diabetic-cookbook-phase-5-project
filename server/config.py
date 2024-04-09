@@ -8,6 +8,7 @@ from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
 from flask_bcrypt import Bcrypt
+from flask_session import Session
 # Local imports
 
 # Instantiate app, set attributes
@@ -32,3 +33,8 @@ CORS(app)
 
 # Instantitate Bcrypt for password hashing
 bcrypt = Bcrypt(app)
+
+# Generate a secret key `python -c 'import os: print(os.urandom(16))'`
+
+app.config['SECRET_KEY'] = b'\xa2\x1d\xb7,\xfa\xf3\xd1Vz\x1a\x8d9\x98OY\x96'
+app.config['SESSION_TYPE'] = 'filesystem'

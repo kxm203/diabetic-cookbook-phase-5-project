@@ -6,6 +6,8 @@ function Header() {
 
     return (
         <header>
+            <h1 className="header-title">My Recipe App</h1>
+            <br/>
             <nav className="nav-links">
                 <NavLink to="/recipes">Recipes</NavLink>
                 <NavLink to="/recipes/new">New Recipe</NavLink>

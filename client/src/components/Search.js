@@ -13,7 +13,7 @@ const handleInputChange = (event) => {
             <input
                 type="text"
                 id="search"
-                placeholder="Search for recipes..."
+                placeholder="Start with the first letter..."
                 onChange={ handleInputChange}
             />
         </div>

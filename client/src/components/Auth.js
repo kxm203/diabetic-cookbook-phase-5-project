@@ -37,10 +37,12 @@ function Auth({ setUser}) {
         
                 if (response.ok) {
                   const data = await response.json();
-                  setUser(data.user || data); // Assuming the response contains user data
-                  navigate('/recipes'); // Redirect after successful login
+                  setUser(data.user || data);
+                  navigate('/recipes');
                 } else {
-                  console.error('Login failed:', await response.text());
+                    const errorMessage = await response.text();
+                    console.error('Login failed:', errorMessage);
+                    formik.setErrors({ login: errorMessage });
                 }
               } catch (error) {
                 console.error('Error:', error);
@@ -50,15 +52,17 @@ function Auth({ setUser}) {
     function toggleSignUp() {
         setSignUp((currentSignUp) => !currentSignUp)
     }
+    
+
 
     return (
         <Container className="auth-container d-flex flex-column">
             <Button onClick={toggleSignUp} variant="primary">
-                {signUp ? 'Please login!' : 'Signup to add recipes!'}
+                {signUp ? 'Please login to see recipes!' : 'Signup to see the app!'}
             </Button>
             <Form onSubmit={formik.handleSubmit}>
                 <Form.Group controlId="username">
-                    <Form.Label>Username</Form.Label>
+                    <Form.Label></Form.Label>
                     <Form.Control 
                         type="text" 
                         placeholder="Enter username"
@@ -72,7 +76,7 @@ function Auth({ setUser}) {
                     </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group controlId="password">
-                    <Form.Label>Password</Form.Label>
+                    <Form.Label></Form.Label>
                     <Form.Control 
                         type="password" 
                         placeholder="Enter password"
@@ -87,7 +91,7 @@ function Auth({ setUser}) {
                 </Form.Group>
                 {signUp && (
                     <Form.Group controlId="passwordConfirmation">
-                        <Form.Label>Confirm Password</Form.Label>
+                        <Form.Label></Form.Label>
                         <Form.Control 
                             type="password" 
                             placeholder="Confirm password"

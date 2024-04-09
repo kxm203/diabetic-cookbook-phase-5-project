@@ -19,7 +19,7 @@ img {
 }
 
 .nav-links {
-  display: flex;
+  text-align: center;
   justify-content: space-around;
   align-items: center;
 }
@@ -78,4 +78,28 @@ img {
 }
 .new-recipe-form button {
   margin: auto;
+}
+.searchbar {
+  text-align: center;
+}
+.header-title {
+  text-align: center;
+}
+.favorite-btn, .unfavorite-btn {
+  padding: 0.5rem;
+  font-size: 1.5rem;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.favorite-btn {
+  background-color: #f06c64;
+  color: #fff;
+}
+
+.unfavorite-btn {
+  background-color: #fff;
+  color: #f06c64;
+  border: 1px solid #f06c64;
 }
