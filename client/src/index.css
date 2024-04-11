@@ -6,7 +6,8 @@
 }
 
 header {
-  background-color: var(--header);
+  color: yellow;
+  background-color: black;
   padding: 10px 0;
 }
 
@@ -31,7 +32,7 @@ img {
 .nav-links a {
   color: var(--text);
   text-decoration: none;
-  color: black;
+  color: yellow;
   margin: 0 10px;
 }
 
@@ -39,14 +40,6 @@ img {
   color: var(--link);
 }
 
-.dark-mode-button {
-  background-color: var(--link);
-  color: var(--header);
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-}
 .auth-container {
   border-radius: 5px; /* Rounded corners */
   padding: 20px; /* Adjust padding as needed */
@@ -81,25 +74,17 @@ img {
 }
 .searchbar {
   text-align: center;
+  background-color: black;
+  color: yellow;
 }
 .header-title {
   text-align: center;
 }
 .favorite-btn, .unfavorite-btn {
-  padding: 0.5rem;
+  padding: 0;
   font-size: 1.5rem;
   border: none;
-  border-radius: 50%;
+  border-radius: 5px;
   cursor: pointer;
 }
 
-.favorite-btn {
-  background-color: #f06c64;
-  color: #fff;
-}
-
-.unfavorite-btn {
-  background-color: #fff;
-  color: #f06c64;
-  border: 1px solid #f06c64;
-}

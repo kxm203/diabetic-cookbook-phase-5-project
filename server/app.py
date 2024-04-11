@@ -1,19 +1,11 @@
 #!/usr/bin/env python3
-
-# Standard library imports
-
-# Remote library imports
 from flask import Flask, request, jsonify, make_response, session
 from flask_restful import Resource
 from flask_migrate import Migrate
 
-# Local imports
 from config import app, db, api, CORS
-# Add your model imports
-from models import User, Recipe, Category, RecipeCategory, Favorite
+from models import User, Recipe, Category, RecipeCategory
 import ipdb
-
-# Views go here!
 
 class Users(Resource):
     def get(self):
@@ -73,12 +65,14 @@ class Recipes(Resource):
                 ingredients=data["ingredients"],
                 instructions=data["instructions"],
                 user_id=session.get("user_id"),
-            )  
-            
-            categories = Category.query.filter(Category.id.in_(data["categories"])).all()
+            )
+            categories = [int(category) for category in data["categories"]]
+            categories = Category.query.filter(Category.id.in_("categories")).all()
             new_recipe.categories = categories
             db.session.add(new_recipe)
             db.session.commit()
+
+            
             
             response =  make_response(new_recipe.to_dict(), 201)
             return response
@@ -108,6 +102,9 @@ class Recipes(Resource):
         recipe = Recipe.query.get(id)
         if recipe:
             try:
+                for recipe_category in recipe.recipe_categories:
+                    db.session.delete(recipe_category)
+
                 db.session.delete(recipe)
                 db.session.commit()
                 return {'message': 'Recipe deleted successfully'}, 200
@@ -118,22 +115,8 @@ class Recipes(Resource):
 
 api.add_resource(Recipes, '/recipes', '/recipes/<int:id>')
 
-@app.route('/favorites', methods=['POST'])
-def add_favorite():
-    user_id = session.get('user_id')
-    recipe_id = request.json['recipe_id']
-    user = User.query.get(user_id)
-    recipe = Recipe.query.get(recipe_id)
-    user.add_favorite(recipe)
-    return jsonify({'message': 'Recipe favorited'}), 201
 
-@app.route('/favorites/<int:recipe_id>', methods=['DELETE'])
-def remove_favorite(recipe_id):
-    user_id = session.get('user_id')
-    user = User.query.get(user_id)
-    recipe = Recipe.query.get(recipe_id)
-    user.remove_favorite(recipe)
-    return jsonify({'message': 'Recipe unfavorited'}), 200
+
     
 
 

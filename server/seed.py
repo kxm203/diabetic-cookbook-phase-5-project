@@ -8,10 +8,21 @@ from faker import Faker
 
 # Local imports
 from app import app
-from models import db
+from models import db, Category
 
 if __name__ == '__main__':
-    fake = Faker()
     with app.app_context():
-        print("Starting seed...")
+        print("Starting seed for categories...")
         # Seed code goes here!
+        categories_data = [
+            {"name": "Low-carb"},
+            {"name": "Sugar-free"},
+            {"name": "Vegetarian"},
+        ]
+
+        for category_info in categories_data:
+            category = Category(**category_info)
+            db.session.add(category)
+
+        db.session.commit()
+        print("Seed for categories completed successfully!")

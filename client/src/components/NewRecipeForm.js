@@ -20,6 +20,7 @@ function NewRecipeForm() {
             instructions, 
             categories: categories.map(category => category.trim()),
         };
+        console.log("Recipe Data:", recipeData);
 
         const addRecipe = (newRecipe) => {
             fetch("/recipes", {
@@ -38,6 +39,17 @@ function NewRecipeForm() {
             setIngredients("");
             setInstructions("");
             setCategories([]);
+    };
+
+    const handleCategoryChange = (event) => {
+        setCategories(prevCategories => {
+            const selectedCategory = event.target.value;
+            if (prevCategories.includes(selectedCategory)) {
+                return prevCategories.filter(category => category !== selectedCategory);
+            } else {
+                return [...prevCategories, selectedCategory];
+            }
+        });
     };
 
     return (
@@ -69,7 +81,7 @@ function NewRecipeForm() {
                         onChange={(event) => setIngredients(event.target.value)}
                     />
                     <label htmlFor="instructions">Instructions: </label>
-                    <input
+                    <textarea
                         type="text"
                         id="instructions"
                         value={instructions}
@@ -80,11 +92,7 @@ function NewRecipeForm() {
                         id="categories"
                         multiple
                         value={categories}
-                        onChange={(event) => 
-                            setCategories(
-                                Array.from(event.target.selectedOptions, (option) => option.value)
-                            )
-                        }
+                        onChange={handleCategoryChange}
                     >
                         {hardcodedCategories.map((category, index) => (
                             <option key={index} value={category}>
@@ -94,7 +102,7 @@ function NewRecipeForm() {
                     </select>
                     <button type="submit">Submit</button>
                 </form>
-            </section>
+                </section>
         </div>
     );
 };
