@@ -7,7 +7,7 @@ function RecipeList({ recipes, addRecipe }) {
     const addToFavorites = (recipe) => {
         setFavoriteRecipes([...favoriteRecipes, recipe]);
     };
-
+    console.log(recipes)
     return (
         <ul className="recipes">
             {recipes.map((recipe) => (

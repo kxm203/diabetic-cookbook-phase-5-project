@@ -21,7 +21,7 @@ function RecipeCard({ recipe, addToFavorites }) {
             <p>Time to Make in Minutes: {recipe.time_to_make}</p>
             <p>Ingredients: {recipe.ingredients}</p>
             <p>Instructions: {recipe.instructions}</p>
-            <p>Categories: {recipe.categories}</p>
+            <p>Categories: {recipe.categories.map(category => category.name).join(', ')}</p>
             {isFavorite ? (
                 <button className="primary favorite-btn" onClick={handleClick}>❤️</button>
             ) : (

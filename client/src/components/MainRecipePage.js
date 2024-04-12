@@ -16,7 +16,7 @@ function MainRecipePage() {
         .then((data) => setRecipes(data))
     }, []);
 
-    
+
     useEffect(() => {
         const filtered = recipes.filter((recipe) =>
         recipe.title.toLowerCase().includes(searchQuery.toLowerCase())
@@ -47,7 +47,7 @@ function MainRecipePage() {
     return (
         <main className="main-container">
             <Header />
-            <Search onChange={ handleSearch }/>
+            <Search onChange={ handleSearch } recipes={recipes}/>
             <RecipeList recipes={filteredRecipes} deleteRecipe={deleteRecipe} />
         </main>
     );

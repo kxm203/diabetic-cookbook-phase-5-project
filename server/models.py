@@ -63,6 +63,8 @@ class Category(db.Model, SerializerMixin):
     recipe_categories = db.relationship('RecipeCategory',back_populates='category')
     recipes = association_proxy('recipe_categories', 'recipe')
 
+    
+
 class RecipeCategory(db.Model):
     __tablename__ = 'recipe_categories'
 

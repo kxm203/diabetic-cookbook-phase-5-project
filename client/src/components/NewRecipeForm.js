@@ -23,8 +23,10 @@ function NewRecipeForm() {
             time_to_make: timeToMake, 
             ingredients, 
             instructions, 
-            categories: categories.map(category => category.trim()),
+            categories,
         };
+        
+
         console.log("Recipe Data:", recipeData);
 
         const addRecipe = (newRecipe) => {
@@ -100,7 +102,7 @@ function NewRecipeForm() {
                         onChange={handleCategoryChange}
                     >
                         {allCategories.map((category, index) => (
-                            <option value={category.id}>
+                            <option key={category.id} value={category.id}>
                                 {category.name}
                             </option>
                         ))}

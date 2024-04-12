@@ -71,14 +71,15 @@ class Recipes(Resource):
                 instructions=data["instructions"],
                 user_id=session.get("user_id"),
             )
-           
-            category_data = data.get("categories", [])
-            if category_data:
-                categories = Category.query.filter(Category.id.in_(category_data)).all()
-                for category in categories:
-                    print(category.name)
-                
             
+            category_data = data.get("categories")
+            
+            if category_data:
+        
+                for category in category_data:
+                    recipe_category = RecipeCategory(category_id=int(category))
+                    new_recipe.recipe_categories.append(recipe_category)
+            ipdb.set_trace()
             db.session.add(new_recipe)
             db.session.commit()
             
