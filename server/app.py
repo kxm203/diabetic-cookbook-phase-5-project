@@ -11,7 +11,7 @@ class Users(Resource):
     def get(self):
         users = User.query.all()
         users_list = [user.to_dict() for user in users]
-        return make_response(jsonify(users_list), 200)
+        return make_response(users_list, 200)
 
     def post(self, login=None):
         data = request.json
@@ -46,17 +46,22 @@ class Users(Resource):
             return True
         return False
 
-   
-
 api.add_resource(Users, '/users', '/users/<int:id>', '/login')
+
+@app.route('/logout', methods=['POST'])
+def logout():
+    session.clear()
+    return jsonify({'message': 'Logged out successfully'}), 200
+
 
 class Recipes(Resource):
     def get(self):
         recipes = Recipe.query.all()
         recipes_list = [recipe.to_dict() for recipe in recipes]
-        return make_response(jsonify(recipes_list), 200)
+        return make_response(recipes_list, 200)
 
     def post(self):
+        
         data = request.json
         try:
             new_recipe = Recipe(
@@ -66,12 +71,16 @@ class Recipes(Resource):
                 instructions=data["instructions"],
                 user_id=session.get("user_id"),
             )
-            categories = [int(category) for category in data["categories"]]
-            categories = Category.query.filter(Category.id.in_("categories")).all()
-            new_recipe.categories = categories
+           
+            category_data = data.get("categories", [])
+            if category_data:
+                categories = Category.query.filter(Category.id.in_(category_data)).all()
+                for category in categories:
+                    print(category.name)
+                
+            
             db.session.add(new_recipe)
             db.session.commit()
-
             
             
             response =  make_response(new_recipe.to_dict(), 201)
@@ -114,6 +123,25 @@ class Recipes(Resource):
             return {'error': 'Recipe not found'}, 404
 
 api.add_resource(Recipes, '/recipes', '/recipes/<int:id>')
+
+class Categories(Resource):
+    def get(self):
+        categories = Category.query.all()
+        categories_list = [category.to_dict() for category in categories]
+        return make_response(categories_list, 200)
+
+
+api.add_resource(Categories, '/categories')
+
+@app.route('/recipes/favorite', methods=['GET'])
+def favorite():
+    user = User.query.get(session.get('user_id'))
+    if user:
+        favorites = user.favorites
+        favorites_list = [favorite.to_dict() for favorite in favorites]
+        return jsonify(favorites_list)
+    else:
+        return jsonify({'error': 'User not found'}), 404
 
 
 

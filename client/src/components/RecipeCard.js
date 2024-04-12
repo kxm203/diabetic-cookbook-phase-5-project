@@ -1,12 +1,17 @@
 import React, { useState, } from "react";
+import { useNavigate } from "react-router-dom";
 
 function RecipeCard({ recipe, addToFavorites }) {
     const [isFavorite, setIsFavorite] = useState(false);
+    const navigate = useNavigate();
 
     const handleClick = () => {
         setIsFavorite(!isFavorite);
         if (addToFavorites) {
             addToFavorites(recipe);
+        }
+        if (isFavorite) {
+            navigate('/recipes/favorite');
         }
     };
 

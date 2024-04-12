@@ -1,8 +1,8 @@
-"""Trying everything and then troubleshooting.
+"""Added model RecipeCategory.
 
-Revision ID: c16a3ef7c0a6
-Revises: 53a5c48086cb
-Create Date: 2024-04-08 14:38:23.713095
+Revision ID: a14429cf7489
+Revises: dd7b0ec8b3ef
+Create Date: 2024-04-11 14:04:09.369667
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'c16a3ef7c0a6'
-down_revision = '53a5c48086cb'
+revision = 'a14429cf7489'
+down_revision = 'dd7b0ec8b3ef'
 branch_labels = None
 depends_on = None
 

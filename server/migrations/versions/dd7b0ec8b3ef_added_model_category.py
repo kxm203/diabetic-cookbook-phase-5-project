@@ -1,8 +1,8 @@
-"""Commented out RecipeCategory for troubleshooting
+"""Added model Category
 
-Revision ID: 53a5c48086cb
-Revises: ad00eed1ac4f
-Create Date: 2024-04-08 14:03:19.816590
+Revision ID: dd7b0ec8b3ef
+Revises: a0c04ce59079
+Create Date: 2024-04-11 13:53:39.431536
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '53a5c48086cb'
-down_revision = 'ad00eed1ac4f'
+revision = 'dd7b0ec8b3ef'
+down_revision = 'a0c04ce59079'
 branch_labels = None
 depends_on = None
 

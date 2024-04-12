@@ -12,7 +12,7 @@ function FavoritesPage() {
 
     const fetchFavoriteRecipes = async () => {
         try {
-            const response = await fetch("/favorites");
+            const response = await fetch("/recipes/favorites");
             if (!response.ok) {
                 throw new Error("Failed to fetch favorite recipes");
             }

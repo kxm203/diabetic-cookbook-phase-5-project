@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from './Header';
 
 function NewRecipeForm() {
@@ -8,8 +8,13 @@ function NewRecipeForm() {
     const [instructions, setInstructions] = useState("");
     const [categories, setCategories] = useState([]);
     const [recipes, setRecipes] = useState("");
+    const [allCategories, setAllCategories] = useState([]);
 
-    const hardcodedCategories = ["Low-carb", "Sugar-free", "Vegetarian"];
+    useEffect(() => {
+        fetch("/categories")
+        .then((resp) => resp.json())
+        .then((data) => setAllCategories(data))
+    }, []);
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -94,9 +99,9 @@ function NewRecipeForm() {
                         value={categories}
                         onChange={handleCategoryChange}
                     >
-                        {hardcodedCategories.map((category, index) => (
-                            <option key={index} value={category}>
-                                {category}
+                        {allCategories.map((category, index) => (
+                            <option value={category.id}>
+                                {category.name}
                             </option>
                         ))}
                     </select>

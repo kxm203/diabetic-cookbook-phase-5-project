@@ -7,7 +7,7 @@ from config import db, bcrypt
 class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
 
-    serialize_rules = ('-created_at', '-updated_at', '-_password_hash',)
+    serialize_rules = ('-created_at', '-updated_at', '-_password_hash', '-recipes.user')
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, unique=True, nullable=False)
@@ -16,6 +16,7 @@ class User(db.Model, SerializerMixin):
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
     recipes = db.relationship('Recipe', back_populates='user')
+    #favorites = db.relationship('Recipe', secondary='Favorites', backref='users', lazy=True)
 
     @property
     def password_hash(self):
@@ -36,7 +37,7 @@ class User(db.Model, SerializerMixin):
 class Recipe(db.Model, SerializerMixin):
     __tablename__ = 'recipes'
 
-    serialize_rules = ('-user', '-categories',)
+    serialize_rules = ('-user.recipes', '-categories.recipes', '-recipe_categories', 'categories',)
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(50), nullable=False)
@@ -46,28 +47,29 @@ class Recipe(db.Model, SerializerMixin):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     user = db.relationship('User', back_populates='recipes')
 
-    categories = db.relationship('Category', secondary='recipe_categories', back_populates='recipes', single_parent=True)
-
+    recipe_categories = db.relationship('RecipeCategory', back_populates='recipe')
+    categories = association_proxy('recipe_categories', 'category')
     def __repr__(self):
-        return f'<user id={self.id} title={self.title} time_to_make={self.time_to_make} ingredients={self.ingredients} instructions={self.instructions} categories={self.categories}>'
+        return f'<user id= {self.id} title= {self.title} time_to_make= {self.time_to_make} ingredients= {self.ingredients} instructions= {self.instructions}>'
 
 class Category(db.Model, SerializerMixin):
     __tablename__ = 'categories'
 
-    serialize_rules = ('recipes',)
-
+    serialize_rules = ('-recipes.categories',)
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=True)
 
-    recipes = db.relationship('Recipe', secondary='recipe_categories', back_populates='categories')
+    recipe_categories = db.relationship('RecipeCategory',back_populates='category')
+    recipes = association_proxy('recipe_categories', 'recipe')
 
 class RecipeCategory(db.Model):
     __tablename__ = 'recipe_categories'
 
-    recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), primary_key=True)
-    category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'))
+    category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
 
-    recipes = db.relationship('Recipe', backref='recipe_categories')
-    category = db.relationship('Category', backref='recipe_categories', overlaps=('recipes'))
+    recipe = db.relationship('Recipe', back_populates='recipe_categories')
+    category = db.relationship('Category', back_populates='recipe_categories')
 

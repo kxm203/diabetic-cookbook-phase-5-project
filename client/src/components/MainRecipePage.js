@@ -23,7 +23,7 @@ function MainRecipePage() {
         );
         setFilteredRecipes(filtered);
     },  [searchQuery, recipes]);
-
+    console.log(recipes)
     const handleSearch = (query) => {
         setSearchQuery(query);
     };
