@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import RecipeCard from "./RecipeCard";
 import Header from "./Header"
 
-function FavoritesPage() {
+function FavoritesPage({ addToFavorites }) {
     const [favoriteRecipes, setFavoriteRecipes] = useState([]);
 
     // Fetch favorite recipes from the server when the component mounts
@@ -34,7 +34,7 @@ function FavoritesPage() {
             <h1>Favorites</h1>
             <ul>
                 {favoriteRecipes.map((recipe) => (
-                    <RecipeCard key={recipe.id} recipe={recipe} />
+                    <RecipeCard key={recipe.id} recipe={recipe} addToFavorites={addToFavorites} />
                 ))}
             </ul>
         </div>

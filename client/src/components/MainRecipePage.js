@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import NewRecipeForm from "./NewRecipeForm";
 import RecipeList from "./RecipeList";
 import Search from "./Search";
 import Header from "./Header";
@@ -23,11 +22,12 @@ function MainRecipePage() {
         );
         setFilteredRecipes(filtered);
     },  [searchQuery, recipes]);
-    console.log(recipes)
+
     const handleSearch = (query) => {
         setSearchQuery(query);
     };
-    const deleteRecipe = (recipeId) => {
+    const handleDelete = (recipeId) => {
+        
         fetch(`/recipes/${recipeId}`, {
             method:"DELETE",
         })
@@ -41,14 +41,17 @@ function MainRecipePage() {
             }
         });
     };
+    const handleUpdate = (recipeId) => {
+
+    };
 
     
 
     return (
-        <main className="main-container">
+        <main className="main-container" >
             <Header />
             <Search onChange={ handleSearch } recipes={recipes}/>
-            <RecipeList recipes={filteredRecipes} deleteRecipe={deleteRecipe} />
+            <RecipeList recipes={filteredRecipes} handleDelete={handleDelete} handleUpdate={handleUpdate}/>
         </main>
     );
 }

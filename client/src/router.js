@@ -1,9 +1,9 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "./App";
 import MainRecipePage from "./components/MainRecipePage";
-import RecipeList from "./components/RecipeList";
 import NewRecipeForm from "./components/NewRecipeForm";
 import Favorite from "./components/Favorite";
+import ErrorPage from "./components/ErrorPage";
 
 const routes = [
     {
@@ -22,6 +22,10 @@ const routes = [
         path: '/recipes/favorite',
         element: <Favorite />,
     },
+    {
+        path: "*",
+        element: <ErrorPage />,
+    }
 ]
 
 export const router = createBrowserRouter(routes)

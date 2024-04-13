@@ -16,7 +16,10 @@ class User(db.Model, SerializerMixin):
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
     recipes = db.relationship('Recipe', back_populates='user')
-    #favorites = db.relationship('Recipe', secondary='Favorites', backref='users', lazy=True)
+    # favorite_categories = db.relationship('FavoriteCategory', back_populates= 'user')
+    # recipes = association_proxy('favorite_categories', 'recipe')
+
+
 
     @property
     def password_hash(self):
@@ -28,6 +31,7 @@ class User(db.Model, SerializerMixin):
         bcrypt_hash = bcrypt.generate_password_hash(byte_object)
         hash_object_as_string = bcrypt_hash.decode('utf-8')
         self._password_hash = hash_object_as_string
+
 
 
     def __repr__(self):
@@ -49,6 +53,11 @@ class Recipe(db.Model, SerializerMixin):
 
     recipe_categories = db.relationship('RecipeCategory', back_populates='recipe')
     categories = association_proxy('recipe_categories', 'category')
+
+    # favorite_categories = db.relationship('FavoriteCategory', back_populates= 'recipe')
+    # users = association_proxy('favorite_categories', 'user')
+
+
     def __repr__(self):
         return f'<user id= {self.id} title= {self.title} time_to_make= {self.time_to_make} ingredients= {self.ingredients} instructions= {self.instructions}>'
 
@@ -75,3 +84,12 @@ class RecipeCategory(db.Model):
     recipe = db.relationship('Recipe', back_populates='recipe_categories')
     category = db.relationship('Category', back_populates='recipe_categories')
 
+# class FavoriteRecipe(db.Model):
+#     __tablename__ = 'favorite_categories'
+
+#     id = db.Column(db.Integer, primary_key=True)
+#     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+#     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'))
+
+#     user = db.relationship('User', back_populates='favorite_categories')
+#     recipe = db.relationship('Recipe', back_populates= 'favorite_categories')

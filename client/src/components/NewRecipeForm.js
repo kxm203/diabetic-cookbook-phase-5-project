@@ -25,9 +25,6 @@ function NewRecipeForm() {
             instructions, 
             categories,
         };
-        
-
-        console.log("Recipe Data:", recipeData);
 
         const addRecipe = (newRecipe) => {
             fetch("/recipes", {
@@ -94,19 +91,21 @@ function NewRecipeForm() {
                         value={instructions}
                         onChange={(event) => setInstructions(event.target.value)}
                     />
-                    <label htmlFor="categories">Categories: </label>
-                    <select
-                        id="categories"
-                        multiple
-                        value={categories}
-                        onChange={handleCategoryChange}
-                    >
-                        {allCategories.map((category, index) => (
-                            <option key={category.id} value={category.id}>
-                                {category.name}
-                            </option>
-                        ))}
-                    </select>
+                    <div className="category-select">
+                        <label htmlFor="categories">Categories: </label>
+                        <select
+                            id="categories"
+                            multiple
+                            value={categories}
+                            onChange={handleCategoryChange}
+                        >
+                            {allCategories.map((category) => (
+                                <option key={category.id} value={category.id}>
+                                    {category.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
                     <button type="submit">Submit</button>
                 </form>
                 </section>

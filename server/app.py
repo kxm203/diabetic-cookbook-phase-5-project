@@ -75,11 +75,9 @@ class Recipes(Resource):
             category_data = data.get("categories")
             
             if category_data:
-        
                 for category in category_data:
                     recipe_category = RecipeCategory(category_id=int(category))
                     new_recipe.recipe_categories.append(recipe_category)
-            ipdb.set_trace()
             db.session.add(new_recipe)
             db.session.commit()
             
@@ -135,7 +133,7 @@ class Categories(Resource):
 api.add_resource(Categories, '/categories')
 
 @app.route('/recipes/favorite', methods=['GET'])
-def favorite():
+def favoriteRecipe():
     user = User.query.get(session.get('user_id'))
     if user:
         favorites = user.favorites
