@@ -12,7 +12,7 @@ function FavoritesPage({ addToFavorites }) {
 
     const fetchFavoriteRecipes = async () => {
         try {
-            const response = await fetch("/recipes/favorites");
+            const response = await fetch("/recipes");
             if (!response.ok) {
                 throw new Error("Failed to fetch favorite recipes");
             }
@@ -25,7 +25,7 @@ function FavoritesPage({ addToFavorites }) {
 
     // const toggleFavorite = (recipeId, isFavorite) => {
     //     // Update the favorite status of the recipe on the backend
-    //     // Update the favoriteRecipes state accordingly
+    //     // Update the favoriteRecipes state 
     // };
 
     return (

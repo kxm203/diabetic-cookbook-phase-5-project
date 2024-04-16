@@ -1,24 +1,45 @@
 import React, { useState, useEffect } from "react";
-import Header from './Header';
+import { useParams } from "react-router-dom";
+import Header from "./Header";
 
-function NewRecipeForm() {
+function UpdateRecipeForm({ recipe }) {
+    const { id } = useParams();
+    const [recipeData, setRecipeData] = useState("");
     const [title, setTitle] = useState("");
     const [timeToMake, setTimeToMake] = useState("");
     const [ingredients, setIngredients] = useState("");
     const [instructions, setInstructions] = useState("");
     const [categories, setCategories] = useState([]);
-    const [recipes, setRecipes] = useState("");
     const [allCategories, setAllCategories] = useState([]);
+
+    useEffect(() => {
+        if (recipeData) {
+            fetch(`/recipes/${id}`)
+            .then((resp) => resp.json())
+            .then((data) => {
+                setRecipeData(data);
+                setTitle(data.title);
+                setTimeToMake(data.time_to_make);
+                setIngredients(data.ingredients);
+                setInstructions(data.instructions);
+                setCategories(data.categories.map((category) => category.id));
+            })
+            .catch((error) => console.error("Error fetching recipe:", error));
+        }
+    }, [recipeData]);
+    console.log("recipeData:", recipeData);
 
     useEffect(() => {
         fetch("/categories")
         .then((resp) => resp.json())
         .then((data) => setAllCategories(data))
-    }, []);
+        .catch((error) => console.error("Error fetching categories:", error));
+    }, [id]);
+
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        const recipeData = { 
+        const updatedRecipeData = { 
             title, 
             time_to_make: timeToMake, 
             ingredients, 
@@ -26,41 +47,36 @@ function NewRecipeForm() {
             categories,
         };
 
-        const addRecipe = (newRecipe) => {
-            fetch("/recipes", {
-                method: "POST",
-                headers: {"Content-Type": "Application/json"},
-                body: JSON.stringify(newRecipe),
-            })
-            .then((resp) => resp.json())
-            .then((data) => {
-                setRecipes([...recipes, data]);
-            })
-        };
-            addRecipe(recipeData);
-            setTitle("");
-            setTimeToMake("");
-            setIngredients("");
-            setInstructions("");
-            setCategories([]);
+        handleUpdate(id, updatedRecipeData);
     };
 
     const handleCategoryChange = (event) => {
-        setCategories(prevCategories => {
-            const selectedCategory = event.target.value;
-            if (prevCategories.includes(selectedCategory)) {
-                return prevCategories.filter(category => category !== selectedCategory);
-            } else {
-                return [...prevCategories, selectedCategory];
-            }
-        });
+        setCategories(event.target.value);
     };
+
+    const handleUpdate = (recipeId, recipeData) => {
+        fetch(`recipes/${recipeId}`, {
+            method: "PATCH",
+            headers: {"Content-Type": "Application/json"},
+            body: JSON.stringify(recipeData),
+        })
+            .then((resp) => resp.json())
+            .then((data) => {
+                setRecipeData(data);
+                setTitle("");
+                setTimeToMake("");
+                setIngredients("");
+                setCategories([]);
+            });
+    };
+    
+    
 
     return (
         <div>
             <Header />
-                <section className="new-recipe-form" >
-                <h1>Add A Recipe!</h1>
+                <section className="update-recipe-form" >
+                <h1>Update Your Recipe!</h1>
                 <br />
                 <br />
                 <form onSubmit={handleSubmit}>
@@ -106,11 +122,11 @@ function NewRecipeForm() {
                             ))}
                         </select>
                     </div>
-                    <button type="submit">Submit</button>
+                    <button type="submit">Update</button>
                 </form>
                 </section>
         </div>
     );
 };
 
-export default NewRecipeForm;
+export default UpdateRecipeForm;

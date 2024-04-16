@@ -55,10 +55,17 @@ def logout():
 
 
 class Recipes(Resource):
-    def get(self):
-        recipes = Recipe.query.all()
-        recipes_list = [recipe.to_dict() for recipe in recipes]
-        return make_response(recipes_list, 200)
+    def get(self, id=None):
+        if id is not None:
+            recipe = Recipe.query.get(id)
+            if recipe:
+                return recipe.to_dict(), 200
+            else:
+                return {'error': "Recipe not found"}, 404
+        else:
+            recipes = Recipe.query.all()
+            recipes_list = [recipe.to_dict() for recipe in recipes]
+            return make_response(recipes_list, 200)
 
     def post(self):
         
@@ -132,15 +139,15 @@ class Categories(Resource):
 
 api.add_resource(Categories, '/categories')
 
-@app.route('/recipes/favorite', methods=['GET'])
-def favoriteRecipe():
-    user = User.query.get(session.get('user_id'))
-    if user:
-        favorites = user.favorites
-        favorites_list = [favorite.to_dict() for favorite in favorites]
-        return jsonify(favorites_list)
-    else:
-        return jsonify({'error': 'User not found'}), 404
+# @app.route('/recipes/favorite', methods=['GET'])
+# def favoriteRecipe():
+#     user = User.query.get(session.get('user_id'))
+#     if user:
+#         favorites = user.favorites
+#         favorites_list = [favorite.to_dict() for favorite in favorites]
+#         return jsonify(favorites_list)
+#     else:
+#         return jsonify({'error': 'User not found'}), 404
 
 
 

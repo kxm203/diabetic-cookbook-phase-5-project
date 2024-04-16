@@ -4,6 +4,7 @@ import MainRecipePage from "./components/MainRecipePage";
 import NewRecipeForm from "./components/NewRecipeForm";
 import Favorite from "./components/Favorite";
 import ErrorPage from "./components/ErrorPage";
+import UpdateRecipeForm from "./components/UpdateRecipeForm";
 
 const routes = [
     {
@@ -21,6 +22,10 @@ const routes = [
     {
         path: '/recipes/favorite',
         element: <Favorite />,
+    },
+    {
+        path: '/recipes/:recipeId',
+        element: <UpdateRecipeForm/>,
     },
     {
         path: "*",

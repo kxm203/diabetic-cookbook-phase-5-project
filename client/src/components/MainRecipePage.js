@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import RecipeList from "./RecipeList";
 import Search from "./Search";
 import Header from "./Header";
+import { useNavigate } from "react-router-dom";
 
 function MainRecipePage() {
+    const navigate = useNavigate();
     const [recipes, setRecipes] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [filteredRecipes, setFilteredRecipes] = useState([]);
@@ -14,7 +16,6 @@ function MainRecipePage() {
         .then((resp) => resp.json())
         .then((data) => setRecipes(data))
     }, []);
-
 
     useEffect(() => {
         const filtered = recipes.filter((recipe) =>
@@ -27,7 +28,6 @@ function MainRecipePage() {
         setSearchQuery(query);
     };
     const handleDelete = (recipeId) => {
-        
         fetch(`/recipes/${recipeId}`, {
             method:"DELETE",
         })
@@ -42,8 +42,10 @@ function MainRecipePage() {
         });
     };
     const handleUpdate = (recipeId) => {
-
+        navigate(`/recipes/${recipeId}`);
+        console.log(recipeId)
     };
+   
 
     
 

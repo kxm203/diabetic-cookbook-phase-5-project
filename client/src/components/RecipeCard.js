@@ -3,26 +3,27 @@ import { useNavigate } from "react-router-dom";
 
 function RecipeCard({ recipe, addToFavorites, handleUpdate, handleDelete }) {
     const [isFavorite, setIsFavorite] = useState(false);
-    //const navigate = useNavigate();
+    const navigate = useNavigate();
 
     const handleClick = () => {
         setIsFavorite(!isFavorite);
         if (addToFavorites) {
             addToFavorites(recipe);
         }
-        // if (isFavorite) {
-        //     navigate('/recipes/favorite', {state: { recipe } });
-        // }
+        if (isFavorite) {
+            navigate('/recipes/favorite', {state: { recipe } });
+        }
     };
+    
 
     return (
         <li className="card" data-testid="recipe-item">
-            <div style={{ backgroundColor: 'bisue', padding: '20px' }}>
+            <div style={{ backgroundColor: 'bisque', padding: '20px' }}>
                 <h4>{recipe.title}</h4>
-                <p>Time to Make in Minutes: {recipe.time_to_make}</p>
-                <p>Ingredients: {recipe.ingredients}</p>
-                <p>Instructions: {recipe.instructions}</p>
-                <p>Categories: {recipe.categories.map(category => category.name).join(', ')}</p>
+                <p><b>Total Time to Make in Minutes: </b>{recipe.time_to_make}</p>
+                <p><b>Ingredients: </b>{recipe.ingredients}</p>
+                <p><b>Instructions: </b>{recipe.instructions}</p>
+                <p><b>Categories: </b>{recipe.categories.map(category => category.name).join(', ')}</p>
                 <br/>
                 <br/>
                 {isFavorite ? (

@@ -16,8 +16,8 @@ class User(db.Model, SerializerMixin):
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
     recipes = db.relationship('Recipe', back_populates='user')
-    # favorite_categories = db.relationship('FavoriteCategory', back_populates= 'user')
-    # recipes = association_proxy('favorite_categories', 'recipe')
+    # favorite_recipes = db.relationship('FavoriteRecipe', back_populates= 'user')
+    # recipes = association_proxy('favorite_recipes', 'recipe')
 
 
 
@@ -54,8 +54,8 @@ class Recipe(db.Model, SerializerMixin):
     recipe_categories = db.relationship('RecipeCategory', back_populates='recipe')
     categories = association_proxy('recipe_categories', 'category')
 
-    # favorite_categories = db.relationship('FavoriteCategory', back_populates= 'recipe')
-    # users = association_proxy('favorite_categories', 'user')
+    # favorite_recipes = db.relationship('FavoriteRecipe', back_populates= 'recipe')
+    # users = association_proxy('favorite_recipes', 'user')
 
 
     def __repr__(self):
@@ -85,11 +85,11 @@ class RecipeCategory(db.Model):
     category = db.relationship('Category', back_populates='recipe_categories')
 
 # class FavoriteRecipe(db.Model):
-#     __tablename__ = 'favorite_categories'
+#     __tablename__ = 'favorite_recipes'
 
 #     id = db.Column(db.Integer, primary_key=True)
 #     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 #     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'))
 
-#     user = db.relationship('User', back_populates='favorite_categories')
-#     recipe = db.relationship('Recipe', back_populates= 'favorite_categories')
+#     user = db.relationship('User', back_populates='favorite_recipes')
+#     recipe = db.relationship('Recipe', back_populates= 'favorite_recipes')

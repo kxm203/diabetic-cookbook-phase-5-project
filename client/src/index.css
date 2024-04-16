@@ -110,3 +110,24 @@ img {
   justify-content: space-between;
   margin-top: auto;
 }
+.favorites {
+  text-align: center;
+}
+.update-recipe-form {
+  text-align: center;
+  justify-content: center;
+  background-color: lightblue;
+  color: orangered;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 20px;
+}
+.update-recipe-form form {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 10px;
+  word-wrap: soft;
+}
+.update-recipe-form button {
+  margin: auto;
+}
