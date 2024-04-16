@@ -16,8 +16,8 @@ class User(db.Model, SerializerMixin):
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
     recipes = db.relationship('Recipe', back_populates='user')
-    # favorite_recipes = db.relationship('FavoriteRecipe', back_populates= 'user')
-    # recipes = association_proxy('favorite_recipes', 'recipe')
+    favorite_recipes = db.relationship('FavoriteRecipe', back_populates= 'user')
+    favorie_recipes_proxy = association_proxy('favorite_recipes', 'recipe')
 
 
 
@@ -54,8 +54,8 @@ class Recipe(db.Model, SerializerMixin):
     recipe_categories = db.relationship('RecipeCategory', back_populates='recipe')
     categories = association_proxy('recipe_categories', 'category')
 
-    # favorite_recipes = db.relationship('FavoriteRecipe', back_populates= 'recipe')
-    # users = association_proxy('favorite_recipes', 'user')
+    favorite_recipes = db.relationship('FavoriteRecipe', back_populates= 'recipe')
+    favorie_users_proxy = association_proxy('favorite_recipes', 'user')
 
 
     def __repr__(self):
@@ -84,12 +84,12 @@ class RecipeCategory(db.Model):
     recipe = db.relationship('Recipe', back_populates='recipe_categories')
     category = db.relationship('Category', back_populates='recipe_categories')
 
-# class FavoriteRecipe(db.Model):
-#     __tablename__ = 'favorite_recipes'
+class FavoriteRecipe(db.Model):
+    __tablename__ = 'favorite_recipes'
 
-#     id = db.Column(db.Integer, primary_key=True)
-#     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-#     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'))
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'))
 
-#     user = db.relationship('User', back_populates='favorite_recipes')
-#     recipe = db.relationship('Recipe', back_populates= 'favorite_recipes')
+    user = db.relationship('User', back_populates='favorite_recipes')
+    recipe = db.relationship('Recipe', back_populates= 'favorite_recipes')

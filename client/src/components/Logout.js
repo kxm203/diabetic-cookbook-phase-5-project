@@ -9,6 +9,7 @@ function Logout() {
         setIsLoggingOut(true);
 
         try {
+            localStorage.clear();
             const response = await fetch('/logout', {
                 method: 'POST',
                 credientials: 'include',

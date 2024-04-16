@@ -131,3 +131,9 @@ img {
 .update-recipe-form button {
   margin: auto;
 }
+footer {
+  color: yellow;
+  background-color: black;
+  padding: 10px 0;
+  text-align: center
+}

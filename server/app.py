@@ -4,7 +4,7 @@ from flask_restful import Resource
 from flask_migrate import Migrate
 
 from config import app, db, api, CORS
-from models import User, Recipe, Category, RecipeCategory
+from models import User, Recipe, Category, RecipeCategory, FavoriteRecipe
 import ipdb
 
 class Users(Resource):
@@ -15,17 +15,34 @@ class Users(Resource):
 
     def post(self, login=None):
         data = request.json
-        try:
-            user = User(username = data['username'])
-            user.password_hash = data['password']
-            db.session.add(user)
-            db.session.commit()
+        if login:
+            try:
+               username = data.get('username')
+               password = data.get('password')
 
-            session['user_id'] = user.id
-            response = make_response(user.to_dict(), 201)
-        except:
-            return make_response({'error': "oops, something was wrong"}, 400)
-        return response
+                if not username or not password:
+                    return make_response({'error': 'Username and password are required'}, 400)
+
+                user = User.query.filter_by(username=username).first()
+
+                if user and user.verify_password(password):
+                    session['user_id'] = user.id
+                    return make_response(user.to_dict(), 200)
+                else:
+                    return make_response({'error': 'Invalid username or password'}, 401)
+            except Exception as e:
+                return make_response({'error': 'Oops, something went wrong'}, 500)
+        else:
+            try:
+                user = User(username=data['username'])
+                user.password_hash = data['password']
+                db.session.add(user)
+                db.session.commit()
+
+                session['user_id'] = user.id
+                return make_response(user.to_dict(), 201)
+        except Exception as e:
+            return make_response({'error': 'Oops, something went wrong'}, 400)
 
 
     def delete(self, id):
@@ -100,13 +117,13 @@ class Recipes(Resource):
         recipe = Recipe.query.get(id)
         if not recipe:
             return {'error': 'Recipe not found'}, 404
-
+        
         data = request.json
-        if 'categories' in data:
-            data['categories'] = data['categories'].split(',')
-            categories = Category.query.filter(Category.id.in_(data["categories"])).all()
-            recipe.categories = categories
-
+        # if 'categories' in data:
+        #     data['categories'] = data['categories']
+        #     categories = Category.query.filter(Category.id.in_(data["categories"])).all()
+        #     recipe.categories = categories
+       
         for attr in data:
             if hasattr(recipe, attr):
                 setattr(recipe, attr, data[attr])
@@ -139,15 +156,19 @@ class Categories(Resource):
 
 api.add_resource(Categories, '/categories')
 
-# @app.route('/recipes/favorite', methods=['GET'])
-# def favoriteRecipe():
-#     user = User.query.get(session.get('user_id'))
-#     if user:
-#         favorites = user.favorites
-#         favorites_list = [favorite.to_dict() for favorite in favorites]
-#         return jsonify(favorites_list)
-#     else:
-#         return jsonify({'error': 'User not found'}), 404
+@app.route('/recipes/favorite', methods=['GET'])
+def get_favorite_recipes():
+    if 'user_id' not in session:
+        return jsonify({'error': 'User not logged in'}), 401
+
+    user_id = session['user_id']
+    user = User.query.get(user_id)
+    if user:
+        favorite_recipes = user.favorite_recipes
+        favorites_list = [recipe.to_dict() for recipe in favorite_recipes]
+        return jsonify(favorites_list), 200
+    else:
+        return jsonify({'error': 'User not found'}), 404
 
 
 

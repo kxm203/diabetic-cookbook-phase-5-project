@@ -25,7 +25,7 @@ function Auth({ setUser}) {
         },
         validationSchema: signUp ? signUpSchema : loginSchema,
         onSubmit: async (values) => {
-            const endpoint = signUp ? '/users' : '/login'
+            const endpoint = signUp ? '/users' : '/login';
             try {
                 const response = await fetch(endpoint, {
                   method: 'POST',
@@ -105,6 +105,8 @@ function Auth({ setUser}) {
                         </Form.Control.Feedback>
                     </Form.Group>
                 )}
+                <br/>
+                <br/>
                 <div className="d-flex justify-content-center">
                 <Button variant="primary" type="submit">
                     Submit

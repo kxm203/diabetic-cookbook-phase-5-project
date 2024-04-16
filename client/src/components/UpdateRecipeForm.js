@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Header from "./Header";
 
-function UpdateRecipeForm({ recipe }) {
-    const { id } = useParams();
-    const [recipeData, setRecipeData] = useState("");
+function UpdateRecipeForm() {
+    const navigate = useNavigate();
+    const { recipeId } = useParams();
+    const [recipeData, setRecipeData] = useState(null);
     const [title, setTitle] = useState("");
     const [timeToMake, setTimeToMake] = useState("");
     const [ingredients, setIngredients] = useState("");
@@ -13,8 +14,8 @@ function UpdateRecipeForm({ recipe }) {
     const [allCategories, setAllCategories] = useState([]);
 
     useEffect(() => {
-        if (recipeData) {
-            fetch(`/recipes/${id}`)
+        if (!recipeData) {
+            fetch(`/recipes/${recipeId}`)
             .then((resp) => resp.json())
             .then((data) => {
                 setRecipeData(data);
@@ -27,14 +28,13 @@ function UpdateRecipeForm({ recipe }) {
             .catch((error) => console.error("Error fetching recipe:", error));
         }
     }, [recipeData]);
-    console.log("recipeData:", recipeData);
-
+    
     useEffect(() => {
         fetch("/categories")
         .then((resp) => resp.json())
         .then((data) => setAllCategories(data))
         .catch((error) => console.error("Error fetching categories:", error));
-    }, [id]);
+    }, [recipeId]);
 
 
     const handleSubmit = (event) => {
@@ -44,10 +44,10 @@ function UpdateRecipeForm({ recipe }) {
             time_to_make: timeToMake, 
             ingredients, 
             instructions, 
-            categories,
+            //categories,
         };
 
-        handleUpdate(id, updatedRecipeData);
+        handleUpdate(recipeId, updatedRecipeData);
     };
 
     const handleCategoryChange = (event) => {
@@ -55,18 +55,15 @@ function UpdateRecipeForm({ recipe }) {
     };
 
     const handleUpdate = (recipeId, recipeData) => {
-        fetch(`recipes/${recipeId}`, {
+        fetch(`/recipes/${recipeId}`, {
             method: "PATCH",
             headers: {"Content-Type": "Application/json"},
             body: JSON.stringify(recipeData),
         })
             .then((resp) => resp.json())
-            .then((data) => {
-                setRecipeData(data);
-                setTitle("");
-                setTimeToMake("");
-                setIngredients("");
-                setCategories([]);
+            .then(() => {
+                navigate('/recipes');
+                
             });
     };
     

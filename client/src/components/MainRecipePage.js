@@ -3,6 +3,7 @@ import RecipeList from "./RecipeList";
 import Search from "./Search";
 import Header from "./Header";
 import { useNavigate } from "react-router-dom";
+import Footer from "./Footer";
 
 function MainRecipePage() {
     const navigate = useNavigate();
@@ -43,7 +44,6 @@ function MainRecipePage() {
     };
     const handleUpdate = (recipeId) => {
         navigate(`/recipes/${recipeId}`);
-        console.log(recipeId)
     };
    
 
@@ -54,6 +54,7 @@ function MainRecipePage() {
             <Header />
             <Search onChange={ handleSearch } recipes={recipes}/>
             <RecipeList recipes={filteredRecipes} handleDelete={handleDelete} handleUpdate={handleUpdate}/>
+            <Footer />
         </main>
     );
 }
