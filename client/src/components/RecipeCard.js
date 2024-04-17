@@ -1,7 +1,7 @@
-import React, { useState, } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function RecipeCard({ recipe, addToFavorites, handleUpdate, handleDelete }) {
+function RecipeCard({ recipe, handleUpdate, handleDelete }) {
     const [isFavorite, setIsFavorite] = useState(false);
     const navigate = useNavigate();
 
@@ -12,6 +12,23 @@ function RecipeCard({ recipe, addToFavorites, handleUpdate, handleDelete }) {
         }
         if (isFavorite) {
             navigate('/recipes/favorite', {state: { recipe } });
+        }
+    };
+    const addToFavorites = async (recipe) => {
+        try {
+            const resp = await fetch('/recipes/favorite', {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ recipeId: recipe.id})
+            });
+            if (!resp.ok) {
+                throw new Error("Failed to add recipe to favorites");
+            }
+        } catch (error) {
+            console.error("Error adding recipe to favorites:", error);
         }
     };
     
