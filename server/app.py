@@ -15,35 +15,19 @@ class Users(Resource):
 
     def post(self, login=None):
         data = request.json
-        if login:
-            try:
-               username = data.get('username')
-               password = data.get('password')
+        try:
+            user = User(username=data['username'])
+            user.password_hash = data['password']
 
-                if not username or not password:
-                    return make_response({'error': 'Username and password are required'}, 400)
+            db.session.add(user)
+            db.session.commit()
 
-                user = User.query.filter_by(username=username).first()
-
-                if user and user.verify_password(password):
-                    session['user_id'] = user.id
-                    return make_response(user.to_dict(), 200)
-                else:
-                    return make_response({'error': 'Invalid username or password'}, 401)
-            except Exception as e:
-                return make_response({'error': 'Oops, something went wrong'}, 500)
-        else:
-            try:
-                user = User(username=data['username'])
-                user.password_hash = data['password']
-                db.session.add(user)
-                db.session.commit()
-
-                session['user_id'] = user.id
-                return make_response(user.to_dict(), 201)
-        except Exception as e:
+            session['user_id'] = user.id
+            response = make_response(user.to_dict(), 201)
+        except:
             return make_response({'error': 'Oops, something went wrong'}, 400)
 
+        return response
 
     def delete(self, id):
         user = User.query.get(id)
@@ -63,12 +47,35 @@ class Users(Resource):
             return True
         return False
 
-api.add_resource(Users, '/users', '/users/<int:id>', '/login')
+api.add_resource(Users, '/users', '/users/<int:id>')
+
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.json
+    user = User.query.filter_by(username=data['username']).first()
+    if not user:
+        return make_response({'error': 'invalid username'}, 404)
+
+    if user.authenticate(data['password']):
+        session['user_id'] = user.id
+        return make_response(user.to_dict(), 200)
+    else:
+        return make_response({'error': 'invalid username and/or password'}, 401)
+
 
 @app.route('/logout', methods=['POST'])
 def logout():
-    session.clear()
+    #session.clear()
     return jsonify({'message': 'Logged out successfully'}), 200
+
+@app.route('/authorized', methods=['GET'])
+def authorized():
+    user_id = session.get('user_id')
+    if user_id:
+        user = User.query.filter_by(id=user_id).first()
+        return make_response(user.to_dict())
+    else:
+        return make_response({'error': 'Unauthorized'}, 401)
 
 
 class Recipes(Resource):

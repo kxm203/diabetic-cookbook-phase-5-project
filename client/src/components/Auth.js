@@ -4,7 +4,7 @@ import { useFormik }from 'formik';
 import * as yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 
-function Auth({ setUser}) {
+function Auth({ setUser }) {
     const [signUp, setSignUp ] = useState(true)
     const navigate = useNavigate();
 
@@ -24,31 +24,27 @@ function Auth({ setUser}) {
             passwordConfirmation: ''
         },
         validationSchema: signUp ? signUpSchema : loginSchema,
-        onSubmit: async (values) => {
-            const endpoint = signUp ? '/users' : '/login';
-            try {
-                const response = await fetch(endpoint, {
-                  method: 'POST',
-                  headers: {
-                    "Content-Type": 'application/json',
-                  },
-                  body: JSON.stringify(values),
-                });
-        
-                if (response.ok) {
-                  const data = await response.json();
-                  setUser(data.user || data);
-                  navigate('/recipes');
+        onSubmit: (values) => {
+            const endpoint = signUp ? '/users' : '/login'
+            fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": 'application/json'
+                },
+                body: JSON.stringify(values)
+            }).then((resp)=> {
+                if (resp.ok) {
+                    resp.json().then(({user}) => {
+                        setUser(user)
+                        navigate('/recipes')
+                    })
                 } else {
-                    const errorMessage = await response.text();
-                    console.error('Login failed:', errorMessage);
-                    formik.setErrors({ login: errorMessage });
+                    console.error('Login failed:')
                 }
-              } catch (error) {
-                console.error('Error:', error);
-              }
-            },
+            })
+        }
     });
+
     function toggleSignUp() {
         setSignUp((currentSignUp) => !currentSignUp)
     }

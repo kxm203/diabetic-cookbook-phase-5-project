@@ -1,9 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom"
 import Auth from "./components/Auth";
 
 function App() {
   const [ loggedInUser, setLoggedInUser ] = useState(null)
+
+  // useEffect(() => {
+  //   fetch('/authorized')
+  //   .then(resp => {
+  //     if (resp.ok) {
+  //       resp.json().then((user) => setLoggedInUser(user)) 
+  //     }
+  //   })
+  // }, [])
 
   return (
     <div className = "login-page">
@@ -14,7 +23,7 @@ function App() {
         {
           !!loggedInUser ?
           <Outlet /> :
-        <Auth setUser={setLoggedInUser} />
+          <Auth setUser={setLoggedInUser} />
         }
       </div>
 

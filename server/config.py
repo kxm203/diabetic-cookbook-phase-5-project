@@ -36,5 +36,4 @@ bcrypt = Bcrypt(app)
 
 # Generate a secret key `python -c 'import os: print(os.urandom(16))'`
 
-app.config['SECRET_KEY'] = b'\xa2\x1d\xb7,\xfa\xf3\xd1Vz\x1a\x8d9\x98OY\x96'
-app.config['SESSION_TYPE'] = 'filesystem'
+app.secret_key = b'\xa2\x1d\xb7,\xfa\xf3\xd1Vz\x1a\x8d9\x98OY\x96'

@@ -39,7 +39,10 @@ function FavoritesPage() {
             <h1>Favorite Recipes</h1>
             <ul>
                 {favoriteRecipes.map((recipe) => (
-                    <RecipeCard key={recipe.id} recipe={recipe} />
+                    <RecipeCard 
+                        key={recipe.id}
+                        recipe={recipe} 
+                    />
                 ))}
             </ul>
         </div>
